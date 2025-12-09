@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import morgan from "morgan";``
+import morgan from "morgan";
+import { envConfig } from "./config/env.config.js";
 
 /**
  * Product Service API
@@ -21,6 +22,14 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
+
+//for logging based on environment
+const mode = envConfig.NODE_ENV;
+if (mode === "dev") {
+  app.use(morgan("dev"));
+} else {
+  app.use(morgan("combined"));
+}
 
 // Simple in-memory store
 let nextId = 3;
@@ -43,7 +52,7 @@ const products = [
   },
 ];
 
-// Helpers
+// Helper
 function findProduct(id) {
   return products.find((p) => p.id === Number(id));
 }
@@ -118,7 +127,7 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 3000;
+const PORT = envConfig.PORT || 3000;
 const server = app.listen(PORT, () => {
   console.log(`Product service listening on port ${PORT}`);
 });
