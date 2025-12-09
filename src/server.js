@@ -3,7 +3,9 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import { envConfig } from "./config/env.config.js";
+import connectDB from "./config/db.js";
 
+connectDB();
 /**
  * Product Service API
  *
